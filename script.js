@@ -20,9 +20,12 @@ function addBtnActionImagemap(btn, props, edid) {
     popup.className = 'imagemap_white_overlay';
     var tableElement= document.createElement('div');
     tableElement.innerHTML=''
+    + '<form>'
+    + '<input type="hidden" name="id" value="' + JSINFO.id + '">'
     + '<table id="imageMapTable" border=1 cellspacing=0 cellpadding=5>'
     + '<tr><th>Nr</th><th>X1</th><th>Y1</th><th>Width</th><th>Height</th><th>URL</th><th>Text</th><th>Remove</th></tr>'
     + '</table>'
+    + '</form>'
     + unescape("<button onClick=\"imagemap.writeOutput();document.getElementById('imagemap_light').style.display='none';document.getElementById('imagemap_fade').style.display='none';\">Uebernehmen</button><br />")
     + unescape("<button onClick=\"document.getElementById('imagemap_light').style.display='none';document.getElementById('imagemap_fade').style.display='none';\">Abbrechen</button><br />")
     + '<textarea id="output" name="user_eingabe" cols="80" rows="10"></textarea>';
