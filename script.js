@@ -241,34 +241,70 @@ function Imagemap () {
     };
 
     this.mouseX = function(evt) {
-        if (!evt) evt = window.event;
-        if (evt.clientX) {
-            if (imagemap.ie_version == 8.0) {
-                return evt.clientX - 10 - document.getElementById('imagemap_light').offsetLeft + document.getElementById('imagemap_light').scrollLeft;
-            } else {
-                return evt.clientX - 10 - document.getElementById('imagemap_light').offsetLeft + document.getElementById('imagemap_light').scrollLeft;
-                //offsetX
-            }
-        } else if (evt.layerX)
-            return evt.layerX + (document.documentElement.scrollLeft ?
+        if (!evt) {
+            evt = window.event;
+        }
+        console.dir(evt);
+        var returnX;
+        if (evt.offsetX) {
+            console.log('offsetX: ' + evt.offsetX);
+            var offsetX_result = evt.offsetX;
+            returnX = offsetX_result;
+        } else if (evt.layerX) {
+            console.log('document.documentElement.scrollLeft: ' + document.documentElement.scrollLeft);
+            console.log('document.body.scrollLeft: ' + document.body.scrollLeft);
+            console.log('layerX: ' + evt.layerX);
+            var layerX_result = evt.layerX + (document.documentElement.scrollLeft ?
                     document.documentElement.scrollLeft :
                     document.body.scrollLeft);
-        else return null;
+            console.log('result: ' + layerX_result);
+            returnX = layerX_result;
+        } else if (evt.clientX) {
+            console.log('imagemap_light.offsetLeft: ' + document.getElementById('imagemap_light').offsetLeft);
+            console.log('imagemap_light.offsetLeft: ' + document.getElementById('imagemap_light').scrollLeft);
+            console.log('clientX: ' + evt.clientX);
+            var consoleX_result = evt.clientX - 10 - document.getElementById('imagemap_light').offsetLeft + document.getElementById('imagemap_light').scrollLeft;
+            console.log('result: ' + consoleX_result);
+            returnX = consoleX_result;
+        } else {
+            returnX = null;
+        }
+
+        return returnX;
     };
 
     this.mouseY = function(evt) {
-        if (!evt) evt = window.event;
-        if (evt.clientY) {
-            if (imagemap.ie_version == 8.0) {
-                return evt.clientY - 10 - document.getElementById('imagemap_light').offsetTop + document.getElementById('imagemap_light').scrollTop;
-            } else {
-                return evt.clientY - 10 - document.getElementById('imagemap_light').offsetTop + document.getElementById('imagemap_light').scrollTop;
-            }
-        } else if (evt.layerY)
-            return evt.layerY + (document.documentElement.scrollTop ?
-                    document.documentElement.scrollTop :
-                    document.body.scrollTop);
-        else return null;
+        if (!evt) {
+            evt = window.event;
+        }
+        console.dir(evt);
+        var returnY;
+        if (evt.offsetY) {
+            console.log('offsetY: ' + evt.offsetY);
+            var offsetY_result = evt.offsetY;
+            returnY = offsetY_result;
+        } else if (evt.layerY) {
+            console.log('document.documentElement.scrollLeft: ' + document.documentElement.scrollLeft);
+            console.log('document.body.scrollLeft: ' + document.body.scrollLeft);
+            console.log('layerY: ' + evt.layerY);
+            var layerY_result = evt.layerY + (document.documentElement.scrollLeft ?
+                    document.documentElement.scrollLeft :
+                    document.body.scrollLeft);
+            console.log('result: ' + layerY_result);
+            returnY = layerY_result;
+        } else if (evt.clientY) {
+            console.log('imagemap_light.offsetLeft: ' + document.getElementById('imagemap_light').offsetLeft);
+            console.log('imagemap_light.offsetLeft: ' + document.getElementById('imagemap_light').scrollLeft);
+            console.log('clientY: ' + evt.clientY);
+            var consoleY_result = evt.clientY - 10 - document.getElementById('imagemap_light').offsetLeft + document.getElementById('imagemap_light').scrollLeft;
+            console.log('result: ' + consoleY_result);
+            returnY = consoleY_result;
+        } else {
+            returnY = null;
+        }
+
+
+        return returnY;
     };
 
     this.myDown = function(e){
