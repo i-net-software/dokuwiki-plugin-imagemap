@@ -461,25 +461,28 @@ function Imagemap () {
     };
 
     this.parseInput = function(text) {
-        var reg = new RegExp('{{(.*?)(\\?.*)?(\\|)(.*?)}}');
-        //var text = document.getElementById('output').value;
+        /*
+         match[1] is the image name and match[2] is the title or undefined
+        */
+        var reg = new RegExp('\{\{(.*?)(?:[\|]|[\}]{2})(?:(.*?)\}\})?');
         var textA = text.split("\n");
         if (textA.length > 1) return this.parseInputImageMap(textA);
         else if (!reg.test(text)) return false;
         //if (!reg.test(text)) return false;
-        reg.exec(text);
-        var imageName = RegExp.$1;
-        filenameWiki = imageName + RegExp.$2;
+        var match = reg.exec(text);
+        var imageName = match[1];
+
+        filenameWiki = imageName
 
         var timestamp = Number(new Date());
 
         imageID = 'Bild' + timestamp;
 
-        //imageName = imageName.trim();
-        imageName = imageName.replace(/:/g, "/");
-        //imageName = 'http://wiki.guardus-solutions.de/_media' + imageName;
-        // JOCHEN
-        imageName = DOKU_BASE+'lib/exe/fetch.php?media=' + imageName;
+        if (!/http\:\/\/|ftp\:\/\//.test(imageName)) {
+            //imageName = imageName.trim();
+            imageName = imageName.replace(/:/g, "/");
+            imageName = DOKU_BASE + 'lib/exe/fetch.php?media=' + imageName;
+        }
         imagemap.img.src = imageName;
         return true;
     };
