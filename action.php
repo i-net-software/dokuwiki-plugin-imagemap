@@ -17,20 +17,19 @@ require_once DOKU_PLUGIN.'action.php';
 
 class action_plugin_imagemap extends DokuWiki_Action_Plugin {
 
-    public function register(Doku_Event_Handler &$controller) {
+    public function register(Doku_Event_Handler $controller) {
 
-       $controller->register_hook('TOOLBAR_DEFINE', 'AFTER', $this, 'handle_toolbar_define');
-   
+        $controller->register_hook('TOOLBAR_DEFINE', 'AFTER', $this, 'handle_toolbar_define');
+
     }
 
     public function handle_toolbar_define(Doku_Event &$event, $param) {
-//die('##########################');
         $event->data[] = array (
             'type' => 'imagemap',
             'title' => 'imagemap',
             'icon' => '../../plugins/imagemap/map.png',
-		'list' => array(),
-	);
+            'list' => array(),
+            );
     }
 
 }
