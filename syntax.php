@@ -44,7 +44,7 @@ class syntax_plugin_imagemap extends DokuWiki_Syntax_Plugin {
         $this->Lexer->addExitPattern('\{\{<map\}\}', 'plugin_imagemap');
     }
 
-    function handle($match, $state, $pos, &$handler){
+    function handle($match, $state, $pos, Doku_Handler $handler){
         global $conf;
         global $ID;
         $args = array($state);
@@ -74,7 +74,7 @@ class syntax_plugin_imagemap extends DokuWiki_Syntax_Plugin {
                               $img['align'], $img['width'], $img['height'],
                               $img['cache']);
 
-                $ReWriter =& new ImageMap_Handler($mapname, $handler->CallWriter);
+                $ReWriter = new ImageMap_Handler($mapname, $handler->CallWriter);
                 $handler->CallWriter =& $ReWriter;
                 break;
             case DOKU_LEXER_EXIT:
@@ -91,7 +91,7 @@ class syntax_plugin_imagemap extends DokuWiki_Syntax_Plugin {
         return $args;
     }
 
-    function render($format, &$renderer, $data) {
+    function render($format, Doku_Renderer $renderer, $data) {
         global $conf;
         global $ID;
         static $has_content=false;
