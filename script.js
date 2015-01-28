@@ -508,7 +508,7 @@ function Imagemap () {
         var match = reg.exec(text);
         var imageName = match[1];
 
-        filenameWiki = imageName
+        filenameWiki = imageName;
 
         var timestamp = Number(new Date());
 
