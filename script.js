@@ -465,19 +465,27 @@ function Imagemap () {
 
 
     this.updateOutput = function() {
-        //var filenameWiki = "REMOVE ME AGAIN";
-        // JOCHEN - SET RANDOM NUMBER FOR IDs e.g. Bild54654
-        var timestamp = Number(new Date());
-
-        var text = "{{map>" + filenameWiki + "|" + imageID + "}}\n";
+        var text = "{{map>" + this.filenameWiki + "|" + this.imageID + "}}\n";
+        var scaleX = 1;
+        var scaleY = 1;
+        if (imagemap.setWidth != undefined && imagemap.setWidth != '0' ){
+            scaleX = Number(imagemap.setWidth)/imagemap.img.width;
+            scaleY = scaleX;
+        } else if (imagemap.setHight != undefined && imagemap.setHight != '0' ){
+            scaleY = Number(imagemap.setHight)/imagemap.img.height;
+            scaleX = scaleY;
+        }
         for (var i = 0; i<this.areas.length; i++) {
-            var x1 = this.areas[i].x1;var y1 = this.areas[i].y1;
-            var x2 = this.areas[i].x1 + this.areas[i].width;var y2 = this.areas[i].y1 + this.areas[i].height;
-            if (x1 == -1) continue; //check if deleted
+            if (this.areas[i].x1 == -1) continue; //check if deleted
+            var x1 = this.areas[i].x1 * scaleX;
+            var y1 = this.areas[i].y1 * scaleY;
+            var x2 = (this.areas[i].x1 + this.areas[i].width) * scaleX;
+            var y2 = (this.areas[i].y1 + this.areas[i].height) * scaleY;
 
             var search = /\[\[(.*)\|\]\]/;
-            if (search.exec(this.areas[i].url))
-                this.areas[i].url = RegExp.$1;
+            if (search.exec(this.areas[i].url)) {
+                this.areas[i].url = search[1];
+            }
 
             var url = this.areas[i].url + "|" + ((this.areas[i].text && (this.areas[i].text.length > 0)) ? this.areas[i].text : this.areas[i].url);
             text += "   * [[" + url + "@ " + x1 + "," + y1 + "," + x2 + "," + y2 + "]]\n";
@@ -518,7 +526,7 @@ function Imagemap () {
 
     this.parseInput = function(text) {
         /*
-         match[1] is the image name, match[2] is the imagesize or undefined and match[3] is the title or undefined
+         match[1] is the image name, match[2] are the imageoptions or undefined and match[3] is the title or undefined
         */
         var reg = /\{\{(.*?)(?:\?(.*?))?(?:[\|]|[\}]{2})(?:(.*?)\}\})?/;
         var textA = text.split("\n");
@@ -527,7 +535,7 @@ function Imagemap () {
         //if (!reg.test(text)) return false;
         var match = reg.exec(text);
         var imageName = match[1];
-        var imagesize = match[2];
+        var imageoptions = match[2];
 
         imagemap.filenameWiki = imageName;
 
@@ -536,11 +544,16 @@ function Imagemap () {
         imagemap.imageID = 'Bild' + timestamp;
 
         if (!/http\:\/\/|ftp\:\/\//.test(imageName)) {
-            //imageName = imageName.trim();
+            //we have a local image
             imageName = imageName.replace(/:/g, "/");
             imageName = DOKU_BASE + 'lib/exe/fetch.php?media=' + imageName;
-        } else {
-            imageName = imageName + '?' + imagesize;
+            if (imageoptions != undefined) {
+                imagemap.filenameWiki = imagemap.filenameWiki + '?' + imageoptions;
+                var cleanoptions = imagemap.getOptions(imageoptions);
+                imageName = imageName + '&' + cleanoptions;
+            }
+        } else if (imageoptions) {
+            imageName = imageName + '?' + imageoptions;
         }
         imagemap.img.src = imageName;
         return true;
