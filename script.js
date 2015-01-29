@@ -498,15 +498,16 @@ function Imagemap () {
 
     this.parseInput = function(text) {
         /*
-         match[1] is the image name and match[2] is the title or undefined
+         match[1] is the image name, match[2] is the imagesize or undefined and match[3] is the title or undefined
         */
-        var reg = new RegExp('\{\{(.*?)(?:[\|]|[\}]{2})(?:(.*?)\}\})?');
+        var reg = /\{\{(.*?)(?:\?(.*?))?(?:[\|]|[\}]{2})(?:(.*?)\}\})?/;
         var textA = text.split("\n");
         if (textA.length > 1) return this.parseInputImageMap(textA);
         else if (!reg.test(text)) return false;
         //if (!reg.test(text)) return false;
         var match = reg.exec(text);
         var imageName = match[1];
+        var imagesize = match[2];
 
         filenameWiki = imageName;
 
@@ -518,6 +519,8 @@ function Imagemap () {
             //imageName = imageName.trim();
             imageName = imageName.replace(/:/g, "/");
             imageName = DOKU_BASE + 'lib/exe/fetch.php?media=' + imageName;
+        } else {
+            imageName = imageName + '?' + imagesize;
         }
         imagemap.img.src = imageName;
         return true;
