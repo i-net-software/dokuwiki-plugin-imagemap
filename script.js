@@ -509,11 +509,11 @@ function Imagemap () {
         var imageName = match[1];
         var imagesize = match[2];
 
-        filenameWiki = imageName;
+        imagemap.filenameWiki = imageName;
 
         var timestamp = Number(new Date());
 
-        imageID = 'Bild' + timestamp;
+        imagemap.imageID = 'Bild' + timestamp;
 
         if (!/http\:\/\/|ftp\:\/\//.test(imageName)) {
             //imageName = imageName.trim();
@@ -531,15 +531,15 @@ function Imagemap () {
         var reg = new RegExp('{{map>(.*?)(\\?.*)?(\\|)(.*?)}}');
         reg.exec(text[0]);
         var imageName = RegExp.$1;
-        filenameWiki = imageName + RegExp.$2;
+        imagemap.filenameWiki = imageName + RegExp.$2;
 
         var st = text[0];
         var timestamp = Number(new Date());
 
         if (st.replace(/.*\||\}/gi,'') === 0) {
-            imageID = 'Bild' + timestamp;
+            imagemap.imageID = 'Bild' + timestamp;
         } else {
-            imageID = st.replace(/.*\||\}/gi,'');
+            imagemap.imageID = st.replace(/.*\||\}/gi,'');
         }
 
         imageName = imageName.replace(/:/g, "/");
