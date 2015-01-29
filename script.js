@@ -496,6 +496,26 @@ function Imagemap () {
         document.getElementById('imagemap_debug').value = document.getElementById('imagemap_debug').value + "\n" + text;
     };
 
+    this.getOptions = function (imageoptions) {
+        var options = imageoptions.split('&');
+        var imagesize;
+        for (var sizeposition = 0; sizeposition < options.length; sizeposition++) {
+            if (/\d+x\d+/.test(options[sizeposition])) {
+                imagesize = /(\d+)x(\d+)/.exec(options[sizeposition]);
+                imagemap.setWidth = imagesize[1];
+                imagemap.setHight = imagesize[2];
+                break;
+            } else if (/\d+/.test(options[sizeposition])) {
+                imagemap.setWidth = options[sizeposition];
+                break;
+            }
+        }
+        if (sizeposition !=  options.length){
+            options.splice(sizeposition, 1);
+        }
+        return options.join('&');
+    };
+
     this.parseInput = function(text) {
         /*
          match[1] is the image name, match[2] is the imagesize or undefined and match[3] is the title or undefined
