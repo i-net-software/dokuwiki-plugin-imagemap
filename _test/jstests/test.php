@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>QUnit Example</title>
+    <title>ImageMap Tests</title>
     <link rel="stylesheet" href="//code.jquery.com/qunit/qunit-1.17.1.css">
 </head>
 <body>
@@ -10,8 +10,11 @@
 <div id="qunit-fixture"></div>
 <script src="//code.jquery.com/qunit/qunit-1.17.1.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="../jquery.rwdImageMaps.js"></script>
-<script src="../script.js"></script>
+<script src="../../jquery.rwdImageMaps.js"></script>
+<script src="../../script.js"></script>
+
+
+
 <script>
     QUnit.module( "parseInput", {
         setup: function( ) {
@@ -65,40 +68,6 @@
         assert.equal(result, true, "We expect the result to be true" );
         assert.equal(imagemap.img.src, 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Tortoiseshell_she-cat.JPG/320px-Tortoiseshell_she-cat.JPG?320', 'We should get the link to the server');
     });
-
-
-    QUnit.module( "parseInputMap", {
-        setup: function( ) {
-            imagemap = new Imagemap();
-            imagemap.img = new Image();
-            DOKU_BASE = 'http://127.0.0.1/~michael/dokuwiki/';
-        }, teardown: function( ) {
-        }
-    });
-    QUnit.test( "simple map", function( assert ) {
-        var line1 = '{{map>512px-catstalkprey.jpg|Bild1422548401308}}\n';
-        var line2 = '   * [[|@ 155,107,268,222]]\n';
-        var line3 = '{{<map}}';
-        var result = imagemap.parseInput(line1 + line2 + line3);
-        assert.equal(result, true, "We expect {{:512px-birdstalkprey.jpg}} to be accepted" );
-        assert.equal(imagemap.img.src, 'http://127.0.0.1/~michael/dokuwiki/lib/exe/fetch.php?media=foo/512px-fishstalkprey.jpg&nocache', 'image source');
-        assert.equal(imagemap.filenameWiki,"foo:512px-fishstalkprey.jpg?200&nocache",'filenameWiki');
-        assert.equal(imagemap.setWidth,'200','imagemap.setWidth');
-        assert.equal(imagemap.setHight,undefined,'imagemap.setHight');
-    });
-
-    QUnit.test( "resized map", function( assert ) {
-        var line1 = '{{map>:512px-catstalkprey.jpg?300&nocache|Bild1422545263962}}\n';
-        var line2 = '   * [[|@ 88.4765625,62.109375,159.9609375,128.90625]]\n';
-        var line3 = '{{<map}}';
-        var result = imagemap.parseInput(line1 + line2 + line3);
-        assert.equal(result, true, "We expect {{:512px-birdstalkprey.jpg}} to be accepted" );
-        assert.equal(imagemap.img.src, 'http://127.0.0.1/~michael/dokuwiki/lib/exe/fetch.php?media=foo/512px-fishstalkprey.jpg&nocache', 'image source');
-        assert.equal(imagemap.filenameWiki,"foo:512px-fishstalkprey.jpg?200&nocache",'filenameWiki');
-        assert.equal(imagemap.setWidth,'200','imagemap.setWidth');
-        assert.equal(imagemap.setHight,undefined,'imagemap.setHight');
-    });
-
 
 
     QUnit.module( "getOptions", {
