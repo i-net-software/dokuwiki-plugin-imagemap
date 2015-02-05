@@ -83,7 +83,7 @@
         var line3 = '{{<map}}';
         var result = imagemap.parseInput(line1 + line2 + line3);
         assert.equal(result, true, "We expect {{:512px-birdstalkprey.jpg}} to be accepted" );
-        assert.equal(imagemap.img.src, 'http://127.0.0.1/~michael/dokuwiki/lib/exe/fetch.php?media=512px-catstalkprey.jpg', 'image source');
+        assert.equal(imagemap.img.src, 'http://127.0.0.1/~michael/dokuwiki/lib/exe/fetch.php?media=512px-catstalkprey.jpg&nocache', 'image source');
         assert.equal(imagemap.filenameWiki,"512px-catstalkprey.jpg?300&nocache",'filenameWiki');
         assert.equal(imagemap.areas[0].x1,155,'x1');
         assert.equal(imagemap.areas[0].y1,107,'y1');
