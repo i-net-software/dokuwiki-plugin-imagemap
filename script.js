@@ -117,6 +117,7 @@ function Imagemap () {
             imagemap.canvas.onmousedown = imagemap.myDown;
             imagemap.canvas.onmouseup = imagemap.myUp;
         };
+        imagemap.output = document.getElementById('output');
         var rv = -1; // Return value assumes failure.
         if (navigator.appName == 'Microsoft Internet Explorer') {
             var ua = navigator.userAgent;
@@ -491,7 +492,7 @@ function Imagemap () {
             text += "   * [[" + url + "@ " + x1 + "," + y1 + "," + x2 + "," + y2 + "]]\n";
         }
         text += "{{<map}}";
-        document.getElementById('output').value = text;
+        imagemap.output.value = text;
         imagemap.draw();
     };
 
