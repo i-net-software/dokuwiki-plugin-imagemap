@@ -546,7 +546,7 @@ function Imagemap () {
 
         if (!/http\:\/\/|ftp\:\/\//.test(imageName)) {
             //we have a local image
-            imageName = imageName.replace(/:/g, "/");
+            imageName = imageName.replace(/:/g, "/"); //this only works if the url-rewrite is activated for the wiki
             imageName = DOKU_BASE + 'lib/exe/fetch.php?media=' + imageName;
             if (imageoptions != undefined) {
                 imagemap.filenameWiki = imagemap.filenameWiki + '?' + imageoptions;
@@ -562,10 +562,11 @@ function Imagemap () {
 
     //import old imagemap entries --> allow to edit old imagemap entries
     this.parseInputImageMap = function(text) {
-        var reg = new RegExp('{{map>(.*?)(\\?.*)?(\\|)(.*?)}}');
-        reg.exec(text[0]);
-        var imageName = RegExp.$1;
-        imagemap.filenameWiki = imageName + RegExp.$2;
+        var reg = /\{\{map>(.*?)(?:\?(.*?))?(?:\|)(.*?)\}\}/;
+        var match = reg.exec(text[0]);
+        var imageName = match[1];
+        imagemap.filenameWiki = imageName;
+        var imageoptions = match[2];
 
         var st = text[0];
         var timestamp = Number(new Date());
@@ -576,9 +577,19 @@ function Imagemap () {
             imagemap.imageID = st.replace(/.*\||\}/gi,'');
         }
 
-        imageName = imageName.replace(/:/g, "/");
-        // imageName = 'http://wiki.guardus-solutions.de/_media' + imageName;
-        imageName = DOKU_BASE+'lib/exe/fetch.php?media=' + imageName;
+        // the following chunk of code is copied from this.parseInput and should be refactored into a function
+        if (!/http\:\/\/|ftp\:\/\//.test(imageName)) {
+            //we have a local image
+            imageName = imageName.replace(/:/g, "/"); //this only works if the url-rewrite is activated for the wiki
+            imageName = DOKU_BASE + 'lib/exe/fetch.php?media=' + imageName;
+            if (imageoptions != undefined) {
+                imagemap.filenameWiki = imagemap.filenameWiki + '?' + imageoptions;
+                var cleanoptions = imagemap.getOptions(imageoptions);
+                imageName = imageName + '&' + cleanoptions;
+            }
+        } else if (imageoptions) {
+            imageName = imageName + '?' + imageoptions;
+        }
         imagemap.img.src = imageName;
 
         for (i = 1; i < text.length-1; i++) {
