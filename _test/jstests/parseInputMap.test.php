@@ -24,7 +24,13 @@
     }
     QUnit.module( "parseInputMap", {
         setup: function( ) {
-            DOKU_BASE = 'http://127.0.0.1/~michael/dokuwiki/';
+            DOKU_BASE = /(.*?)lib\/plugins/.exec(window.location.href)[1];
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", DOKU_BASE , false);
+            xmlHttp.send();
+            JSINFO = [];
+            JSINFO['plugin_imagemap_mldummy'] = /plugin_imagemap_mldummy":"(.*?)"/.exec(xmlHttp.responseText)[1];
+            this.nsdivider = /wiki(.)dokuwiki-128.png/.exec(JSINFO['plugin_imagemap_mldummy'])[1];
             imagemap = new Imagemap();
             var fade = document.createElement('div');
             fade.id = 'imagemap_fade';
@@ -65,46 +71,47 @@
         }
     });
     QUnit.test( "simple map", function( assert ) {
-        var line1 = "{{map>512px-catstalkprey.jpg|Bild1422548401308}}\n";
-        var line2 = "   * [[foo|bar@ 155,107,268,222]]\n";
+        var line1 = "{{map>wiki:dokuwiki-128.png|Bild1422548401308}}\n";
+        var line2 = "   * [[foo|bar@ 20,15,100,40]]\n";
         var line3 = "{{<map}}";
         var result = imagemap.parseInput(line1 + line2 + line3);
-        assert.equal(result, true, "We expect {{:512px-birdstalkprey.jpg}} to be accepted" );
-        assert.equal(imagemap.img.src, 'http://127.0.0.1/~michael/dokuwiki/lib/exe/fetch.php?media=512px-catstalkprey.jpg', 'image source');
-        assert.equal(imagemap.filenameWiki,"512px-catstalkprey.jpg",'filenameWiki');
-        assert.equal(imagemap.areas[0].x1,155,'x1');
-        assert.equal(imagemap.areas[0].y1,107,'y1');
-        assert.equal(imagemap.areas[0].width,113,'width');
-        assert.equal(imagemap.areas[0].height,115,'height');
+        assert.equal(result, true, "We expect this map to be accepted" );
+        assert.equal(imagemap.img.src, DOKU_BASE +'lib/exe/fetch.php?media=wiki' + this.nsdivider + 'dokuwiki-128.png', 'image source');
+        assert.equal(imagemap.filenameWiki,"wiki:dokuwiki-128.png",'filenameWiki');
+        assert.equal(imagemap.areas[0].x1,20,'x1');
+        assert.equal(imagemap.areas[0].y1,15,'y1');
+        assert.equal(imagemap.areas[0].width,80,'width');
+        assert.equal(imagemap.areas[0].height,25,'height');
         assert.equal(imagemap.areas[0].url,'foo','url');
         assert.equal(imagemap.areas[0].text,'bar','text');
     });
 
     QUnit.test( "resized map", function( assert ) {
-        var line1 = '{{map>512px-catstalkprey.jpg?300&nocache|Bild1422545263962}}\n';
-        var line2 = '   * [[foo|bar@ 91,63,157,130]]\n';
+        //var line1 = '{{map>512px-catstalkprey.jpg?300&nocache|Bild1422545263962}}\n';
+        var line1 = "{{map>wiki:dokuwiki-128.png?300&nocache|Bild1422548401308}}\n";
+        var line2 = '   * [[foo|bar@ 47,35,234,94]]\n';
         var line3 = '{{<map}}';
         var result = imagemap.parseInput(line1 + line2 + line3);
-        assert.equal(result, true, "We expect {{:512px-birdstalkprey.jpg}} to be accepted" );
-        assert.equal(imagemap.img.src, 'http://127.0.0.1/~michael/dokuwiki/lib/exe/fetch.php?media=512px-catstalkprey.jpg&nocache', 'image source');
-        assert.equal(imagemap.filenameWiki,"512px-catstalkprey.jpg?300&nocache",'filenameWiki');
+        assert.equal(result, true, "We expect this map to be accepted" );
+        assert.equal(imagemap.img.src, DOKU_BASE +'lib/exe/fetch.php?media=wiki' + this.nsdivider + 'dokuwiki-128.png&nocache', 'image source');
+        assert.equal(imagemap.filenameWiki,"wiki:dokuwiki-128.png?300&nocache",'filenameWiki');
 
-        var expected = 155;
+        var expected = 20;
         var actual = imagemap.areas[0].x1;
         assert.ok(expected-1<=actual&&actual<=expected+1,'x1' + getTestMsg(expected, actual));
         assert.ok(typeof actual === 'number', "x1 should be of type 'number' and is of type '" + typeof actual+"'.");
 
-        expected = 107;
+        expected = 15;
         actual = imagemap.areas[0].y1;
         assert.ok(expected-1<=actual&&actual<=expected+1,'y1' + getTestMsg(expected, actual));
         assert.ok(typeof actual === 'number', "y1 should be of type 'number' and is of type '" + typeof actual+"'.");
 
-        expected = 113;
+        expected = 80;
         actual = imagemap.areas[0].width;
         assert.ok(expected-1<=actual&&actual<=expected+1,'width' + getTestMsg(expected, actual));
         assert.ok(typeof actual === 'number', "width should be of type 'number' and is of type '" + typeof actual+"'.");
 
-        expected = 115;
+        expected = 25;
         actual = imagemap.areas[0].height;
         assert.ok(expected-1<=actual&&actual<=expected+1,'height' + getTestMsg(expected, actual));
         assert.ok(typeof actual === 'number', "height should be of type 'number' and is of type '" + typeof actual+"'.");
