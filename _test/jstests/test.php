@@ -170,28 +170,6 @@
         assert.equal(!undefined, true, 'undefined');
     });
 
-    QUnit.module( "mouseXY", {
-        setup: function( ) {
-            imagemap = new Imagemap();
-            imagemap.img = new Image();
-            DOKU_BASE = 'http://127.0.0.1/~michael/dokuwiki/';
-            evt = new MouseEvent('e', {
-                layerX: 23,
-                layerY: 14,
-                offsetX: 23,
-                offsetY: 14,
-                clientX: 479,
-                clientY: 205
-            });
-        }, teardown: function( ) {
-        }
-    });
-    QUnit.test( "mouseXY 1", function( assert ) {
-        var result = imagemap.mouseX(evt);
-        assert.equal( result, 23, "We expect the result to be true" );
-    });
-
-
 </script>
 </body>
 </html>
