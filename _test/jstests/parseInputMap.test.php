@@ -19,6 +19,9 @@
 </form>
 
 <script>
+    function getTestMsg(expected, actual){
+        return " should be between " + (expected-1) + " and " + (expected+1) + ", and is " + actual + ".";
+    }
     QUnit.module( "parseInputMap", {
         setup: function( ) {
             DOKU_BASE = 'http://127.0.0.1/~michael/dokuwiki/';
@@ -85,10 +88,27 @@
         assert.equal(result, true, "We expect {{:512px-birdstalkprey.jpg}} to be accepted" );
         assert.equal(imagemap.img.src, 'http://127.0.0.1/~michael/dokuwiki/lib/exe/fetch.php?media=512px-catstalkprey.jpg&nocache', 'image source');
         assert.equal(imagemap.filenameWiki,"512px-catstalkprey.jpg?300&nocache",'filenameWiki');
-        assert.equal(imagemap.areas[0].x1,155,'x1');
-        assert.equal(imagemap.areas[0].y1,107,'y1');
-        assert.equal(imagemap.areas[0].width,113,'width');
-        assert.equal(imagemap.areas[0].height,115,'height');
+
+        var expected = 155;
+        var actual = imagemap.areas[0].x1;
+        assert.ok(expected-1<=actual&&actual<=expected+1,'x1' + getTestMsg(expected, actual));
+        assert.ok(typeof actual === 'number', "x1 should be of type 'number' and is of type '" + typeof actual+"'.");
+
+        expected = 107;
+        actual = imagemap.areas[0].y1;
+        assert.ok(expected-1<=actual&&actual<=expected+1,'y1' + getTestMsg(expected, actual));
+        assert.ok(typeof actual === 'number', "y1 should be of type 'number' and is of type '" + typeof actual+"'.");
+
+        expected = 113;
+        actual = imagemap.areas[0].width;
+        assert.ok(expected-1<=actual&&actual<=expected+1,'width' + getTestMsg(expected, actual));
+        assert.ok(typeof actual === 'number', "width should be of type 'number' and is of type '" + typeof actual+"'.");
+
+        expected = 115;
+        actual = imagemap.areas[0].height;
+        assert.ok(expected-1<=actual&&actual<=expected+1,'height' + getTestMsg(expected, actual));
+        assert.ok(typeof actual === 'number', "height should be of type 'number' and is of type '" + typeof actual+"'.");
+
         assert.equal(imagemap.areas[0].url,'foo','url');
         assert.equal(imagemap.areas[0].text,'bar','text');
     });
