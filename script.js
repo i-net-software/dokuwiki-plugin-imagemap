@@ -546,7 +546,11 @@ function Imagemap () {
 
         if (!/http\:\/\/|ftp\:\/\//.test(imageName)) {
             //we have a local image
-            imageName = imageName.replace(/:/g, "/"); //this only works if the url-rewrite is activated for the wiki
+
+            if (/wiki(.)dokuwiki-128.png/.exec(JSINFO.plugin_imagemap_mldummy)[1]=='/') {
+                //namespaces are not divided by colon, but rewritten to be divided by slash:
+                imageName = imageName.replace(/:/g, "/");
+            }
             imageName = DOKU_BASE + 'lib/exe/fetch.php?media=' + imageName;
             if (imageoptions != undefined) {
                 imagemap.filenameWiki = imagemap.filenameWiki + '?' + imageoptions;
@@ -580,7 +584,12 @@ function Imagemap () {
         // the following chunk of code is copied from this.parseInput and should be refactored into a function
         if (!/http\:\/\/|ftp\:\/\//.test(imageName)) {
             //we have a local image
-            imageName = imageName.replace(/:/g, "/"); //this only works if the url-rewrite is activated for the wiki
+
+            if (/wiki(.)dokuwiki-128.png/.exec(JSINFO.plugin_imagemap_mldummy)[1]=='/') {
+                //namespaces are not divided by colon, but rewritten to be divided by slash:
+                imageName = imageName.replace(/:/g, "/");
+            }
+
             imageName = DOKU_BASE + 'lib/exe/fetch.php?media=' + imageName;
             if (imageoptions != undefined) {
                 imagemap.filenameWiki = imagemap.filenameWiki + '?' + imageoptions;
