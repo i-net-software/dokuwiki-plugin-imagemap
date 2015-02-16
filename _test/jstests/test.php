@@ -26,7 +26,7 @@
             xmlHttp.send();
             JSINFO = [];
             JSINFO['plugin_imagemap_mldummy'] = /plugin_imagemap_mldummy":"(.*?)"/.exec(xmlHttp.responseText)[1];
-            this.nsdivider = /wiki(.)dokuwiki-128.png/.exec(JSINFO['plugin_imagemap_mldummy'])[1];
+            this.nsdivider = /wiki\\?(.)dokuwiki-128.png/.exec(JSINFO['plugin_imagemap_mldummy'])[1];
         }, teardown: function( ) {
         }
     });

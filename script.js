@@ -527,7 +527,7 @@ function Imagemap () {
         if (!/http\:\/\/|ftp\:\/\//.test(imageName)) {
             //we have a local image
 
-            if (/wiki(.)dokuwiki-128.png/.exec(JSINFO.plugin_imagemap_mldummy)[1]=='/') {
+            if (/wiki\\?(.)dokuwiki-128.png/.exec(JSINFO.plugin_imagemap_mldummy)[1]=='/') {
                 //namespaces are not divided by colon, but rewritten to be divided by slash:
                 imageName = imageName.replace(/:/g, "/");
             }
@@ -565,7 +565,7 @@ function Imagemap () {
         if (!/http\:\/\/|ftp\:\/\//.test(imageName)) {
             //we have a local image
 
-            if (/wiki(.)dokuwiki-128.png/.exec(JSINFO.plugin_imagemap_mldummy)[1]=='/') {
+            if (/wiki\\?(.)dokuwiki-128.png/.exec(JSINFO.plugin_imagemap_mldummy)[1]=='/') {
                 //namespaces are not divided by colon, but rewritten to be divided by slash:
                 imageName = imageName.replace(/:/g, "/");
             }
