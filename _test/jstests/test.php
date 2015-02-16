@@ -20,35 +20,41 @@
         setup: function( ) {
             imagemap = new Imagemap();
             imagemap.img = new Image();
-            DOKU_BASE = 'http://127.0.0.1/~michael/dokuwiki/';
+            DOKU_BASE = /(.*?)lib\/plugins/.exec(window.location.href)[1];
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", DOKU_BASE , false);
+            xmlHttp.send();
+            JSINFO = [];
+            JSINFO['plugin_imagemap_mldummy'] = /plugin_imagemap_mldummy":"(.*?)"/.exec(xmlHttp.responseText)[1];
+            this.nsdivider = /wiki(.)dokuwiki-128.png/.exec(JSINFO['plugin_imagemap_mldummy'])[1];
         }, teardown: function( ) {
         }
     });
     QUnit.test( "{{:512px-catstalkprey.jpg|}} passing", function( assert ) {
         var result = imagemap.parseInput('{{:512px-catstalkprey.jpg|}}');
         assert.equal(result, true, "We expect {{:512px-catstalkprey.jpg|}} to be accepted" );
-        assert.equal(imagemap.img.src, 'http://127.0.0.1/~michael/dokuwiki/lib/exe/fetch.php?media=/512px-catstalkprey.jpg', 'image source');
+        assert.equal(imagemap.img.src, DOKU_BASE + 'lib/exe/fetch.php?media=' + this.nsdivider + '512px-catstalkprey.jpg', 'image source');
         assert.equal(imagemap.filenameWiki,":512px-catstalkprey.jpg",'filenameWiki');
     });
 
     QUnit.test( "{{:512px-dogstalkprey.jpg|some title}} passing", function( assert ) {
         var result = imagemap.parseInput('{{:512px-dogstalkprey.jpg|some title}}');
         assert.equal(result, true, "We expect {{:512px-dogstalkprey.jpg|some title}} to be accepted" );
-        assert.equal(imagemap.img.src, 'http://127.0.0.1/~michael/dokuwiki/lib/exe/fetch.php?media=/512px-dogstalkprey.jpg', 'image source');
+        assert.equal(imagemap.img.src, DOKU_BASE + 'lib/exe/fetch.php?media=' + this.nsdivider + '512px-dogstalkprey.jpg', 'image source');
         assert.equal(imagemap.filenameWiki,":512px-dogstalkprey.jpg",'filenameWiki');
     });
 
     QUnit.test( "{{:512px-birdstalkprey.jpg}} passing", function( assert ) {
         var result = imagemap.parseInput('{{:512px-birdstalkprey.jpg}}');
         assert.equal(result, true, "We expect {{:512px-birdstalkprey.jpg}} to be accepted" );
-        assert.equal(imagemap.img.src, 'http://127.0.0.1/~michael/dokuwiki/lib/exe/fetch.php?media=/512px-birdstalkprey.jpg', 'image source');
+        assert.equal(imagemap.img.src, DOKU_BASE + 'lib/exe/fetch.php?media=' + this.nsdivider + '512px-birdstalkprey.jpg', 'image source');
         assert.equal(imagemap.filenameWiki,":512px-birdstalkprey.jpg",'filenameWiki');
     });
 
     QUnit.test( "{{:512px-fishstalkprey.jpg?200x300&recache}} passing", function( assert ) {
         var result = imagemap.parseInput('{{foo:512px-fishstalkprey.jpg?200x300&recache}}');
         assert.equal(result, true, "We expect {{:512px-birdstalkprey.jpg}} to be accepted" );
-        assert.equal(imagemap.img.src, 'http://127.0.0.1/~michael/dokuwiki/lib/exe/fetch.php?media=foo/512px-fishstalkprey.jpg&recache', 'image source');
+        assert.equal(imagemap.img.src, DOKU_BASE + 'lib/exe/fetch.php?media=foo' + this.nsdivider + '512px-fishstalkprey.jpg&recache', 'image source');
         assert.equal(imagemap.filenameWiki,"foo:512px-fishstalkprey.jpg?200x300&recache",'filenameWiki');
         assert.equal(imagemap.setWidth,'200','imagemap.setWidth');
         assert.equal(imagemap.setHight,'300','imagemap.setHight');
@@ -57,7 +63,7 @@
     QUnit.test( "{{:512px-fishstalkprey.jpg?200&nocache}} passing", function( assert ) {
         var result = imagemap.parseInput('{{foo:512px-fishstalkprey.jpg?200&nocache}}');
         assert.equal(result, true, "We expect {{:512px-birdstalkprey.jpg}} to be accepted" );
-        assert.equal(imagemap.img.src, 'http://127.0.0.1/~michael/dokuwiki/lib/exe/fetch.php?media=foo/512px-fishstalkprey.jpg&nocache', 'image source');
+        assert.equal(imagemap.img.src, DOKU_BASE + 'lib/exe/fetch.php?media=foo' + this.nsdivider + '512px-fishstalkprey.jpg&nocache', 'image source');
         assert.equal(imagemap.filenameWiki,"foo:512px-fishstalkprey.jpg?200&nocache",'filenameWiki');
         assert.equal(imagemap.setWidth,'200','imagemap.setWidth');
         assert.equal(imagemap.setHight,undefined,'imagemap.setHight');
