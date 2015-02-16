@@ -612,7 +612,8 @@ function Imagemap () {
             scaleX = scaleY;
         }
 
-        for (i = 1; i < text.length-1; i++) {
+
+        for (var i = 1; i < text.length-1; i++) {
             var regArea = new RegExp('.*\\[\\[(.*)\\|(.*)@(.*),(.*),(.*),(.*)\\]\\].*');
             var re = regArea.exec(text[i]);
             if (re === null) continue;
