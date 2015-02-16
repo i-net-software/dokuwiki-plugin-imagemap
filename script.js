@@ -469,10 +469,10 @@ function Imagemap () {
         var text = "{{map>" + this.filenameWiki + "|" + this.imageID + "}}\n";
         var scaleX = 1;
         var scaleY = 1;
-        if (imagemap.setWidth != undefined && imagemap.setWidth != '0' ){
+        if (imagemap.setWidth !== undefined && imagemap.setWidth != '0' ){
             scaleX = Number(imagemap.setWidth)/imagemap.img.width;
             scaleY = scaleX;
-        } else if (imagemap.setHight != undefined && imagemap.setHight != '0' ){
+        } else if (imagemap.setHight !== undefined && imagemap.setHight != '0' ){
             scaleY = Number(imagemap.setHight)/imagemap.img.height;
             scaleX = scaleY;
         }
@@ -552,7 +552,7 @@ function Imagemap () {
                 imageName = imageName.replace(/:/g, "/");
             }
             imageName = DOKU_BASE + 'lib/exe/fetch.php?media=' + imageName;
-            if (imageoptions != undefined) {
+            if (imageoptions !== undefined) {
                 imagemap.filenameWiki = imagemap.filenameWiki + '?' + imageoptions;
                 var cleanoptions = imagemap.getOptions(imageoptions);
                 imageName = imageName + '&' + cleanoptions;
@@ -591,7 +591,7 @@ function Imagemap () {
             }
 
             imageName = DOKU_BASE + 'lib/exe/fetch.php?media=' + imageName;
-            if (imageoptions != undefined) {
+            if (imageoptions !== undefined) {
                 imagemap.filenameWiki = imagemap.filenameWiki + '?' + imageoptions;
                 var cleanoptions = imagemap.getOptions(imageoptions);
                 imageName = imageName + '&' + cleanoptions;
@@ -603,10 +603,11 @@ function Imagemap () {
 
         var scaleX = 1;
         var scaleY = 1;
-        if (imagemap.setWidth != undefined && imagemap.setWidth != '0' ){
+
+        if (imagemap.setWidth !== undefined && imagemap.setWidth != '0'){
             scaleX = Number(imagemap.setWidth)/imagemap.img.width;
             scaleY = scaleX;
-        } else if (imagemap.setHight != undefined && imagemap.setHight != '0' ){
+        } else if (imagemap.setHight !== undefined && imagemap.setHight != '0'){
             scaleY = Number(imagemap.setHight)/imagemap.img.height;
             scaleX = scaleY;
         }
