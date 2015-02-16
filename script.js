@@ -592,16 +592,26 @@ function Imagemap () {
         }
         imagemap.img.src = imageName;
 
+        var scaleX = 1;
+        var scaleY = 1;
+        if (imagemap.setWidth != undefined && imagemap.setWidth != '0' ){
+            scaleX = Number(imagemap.setWidth)/imagemap.img.width;
+            scaleY = scaleX;
+        } else if (imagemap.setHight != undefined && imagemap.setHight != '0' ){
+            scaleY = Number(imagemap.setHight)/imagemap.img.height;
+            scaleX = scaleY;
+        }
+
         for (i = 1; i < text.length-1; i++) {
             var regArea = new RegExp('.*\\[\\[(.*)\\|(.*)@(.*),(.*),(.*),(.*)\\]\\].*');
             var re = regArea.exec(text[i]);
             if (re === null) continue;
             var url = RegExp.$1;
             var desc = RegExp.$2;
-            var x1 = parseInt(RegExp.$3);
-            var y1 = parseInt(RegExp.$4);
-            var x2 = parseInt(RegExp.$5);
-            var y2 = parseInt(RegExp.$6);
+            var x1 = Math.round(parseInt(RegExp.$3)/scaleX);
+            var y1 = Math.round(parseInt(RegExp.$4)/scaleY);
+            var x2 = Math.round(parseInt(RegExp.$5)/scaleX);
+            var y2 = Math.round(parseInt(RegExp.$6)/scaleY);
             x2 = x2 - x1;
             y2 = y2 - y1;
             this.areas[this.areas.length] = new this.Item(x1, y1, x2, y2, url, desc);
