@@ -478,10 +478,10 @@ function Imagemap () {
         }
         for (var i = 0; i<this.areas.length; i++) {
             if (this.areas[i].x1 == -1) continue; //check if deleted
-            var x1 = (this.areas[i].x1 * scaleX).toFixed();
-            var y1 = (this.areas[i].y1 * scaleY).toFixed();
-            var x2 = ((this.areas[i].x1 + this.areas[i].width) * scaleX).toFixed();
-            var y2 = ((this.areas[i].y1 + this.areas[i].height) * scaleY).toFixed();
+            var x1 = Math.round(this.areas[i].x1 * scaleX);
+            var y1 = Math.round(this.areas[i].y1 * scaleY);
+            var x2 = Math.round((this.areas[i].x1 + this.areas[i].width) * scaleX);
+            var y2 = Math.round((this.areas[i].y1 + this.areas[i].height) * scaleY);
 
             var search = /\[\[(.*)\|\]\]/;
             if (search.exec(this.areas[i].url)) {
