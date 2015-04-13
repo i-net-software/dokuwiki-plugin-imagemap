@@ -347,6 +347,7 @@ function Imagemap () {
             var cellX1 = row.insertCell(1);
             var inputX1 = document.createElement('input');
             inputX1.type = 'text'; inputX1.size = 4; inputX1.onkeyup = imagemap.textChanged;
+            inputX1.onblur = imagemap.textChanged;
             inputX1.value = area.x1;
             inputX1.name = 'imt_x1_' + iter;
             cellX1.appendChild(inputX1);
@@ -354,6 +355,7 @@ function Imagemap () {
             var cellY1 = row.insertCell(2);
             var inputY1 = document.createElement('input');
             inputY1.type = 'text'; inputY1.size = 4; inputY1.onkeyup = imagemap.textChanged;
+            inputY1.onblur = imagemap.textChanged;
             inputY1.value = area.y1;
             inputY1.name = 'imt_y1_' + iter;
             cellY1.appendChild(inputY1);
@@ -361,6 +363,7 @@ function Imagemap () {
             var cellX2 = row.insertCell(3);
             var inputX2 = document.createElement('input');
             inputX2.type = 'text'; inputX2.size = 4; inputX2.onkeyup = imagemap.textChanged;
+            inputX2.onblur = imagemap.textChanged;
             inputX2.value = area.width;
             inputX2.name = 'imt_x2_' + iter;
             cellX2.appendChild(inputX2);
@@ -368,17 +371,22 @@ function Imagemap () {
             var cellY2 = row.insertCell(4);
             var inputY2 = document.createElement('input');
             inputY2.type = 'text'; inputY2.size = 4; inputY2.onkeyup = imagemap.textChanged;
+            inputY2.onblur = imagemap.textChanged;
             inputY2.value = area.height;
             inputY2.name = 'imt_y2_' + iter;
             cellY2.appendChild(inputY2);
 
             var cellURL = row.insertCell(5);
             var inputURL = document.createElement('input');
-            inputURL.type = 'text'; inputURL.size = 40; inputURL.onkeyup = imagemap.textChanged;
-            inputURL.onchange = imagemap.textChanged;
+            inputURL.type = 'text';
+            inputURL.size = 40;
+            inputURL.onkeyup = imagemap.textChanged;
+            inputURL.oninput = imagemap.textChanged;
+            inputURL.onblur = imagemap.textChanged;
             inputURL.value = area.url;
             inputURL.name = 'imt_url_' + iter;
             cellURL.appendChild(inputURL);
+            console.dir(inputURL);
 
             var buttonURL = document.createElement('button');
             buttonURL.innerHTML = '<img src="'+DOKU_BASE+'./lib/images/toolbar/link.png">';
@@ -392,6 +400,7 @@ function Imagemap () {
             var cellText = row.insertCell(6);
             var inputText = document.createElement('input');
             inputText.type = 'text'; inputText.size = 15; inputText.onkeyup = imagemap.textChanged;
+            inputText.onblur = imagemap.textChanged;
             inputText.value = area.text;
             inputText.name = 'imt_text_' + iter;
             cellText.appendChild(inputText);
