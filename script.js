@@ -386,7 +386,6 @@ function Imagemap () {
             inputURL.value = area.url;
             inputURL.name = 'imt_url_' + iter;
             cellURL.appendChild(inputURL);
-            console.dir(inputURL);
 
             var buttonURL = document.createElement('button');
             buttonURL.innerHTML = '<img src="'+DOKU_BASE+'./lib/images/toolbar/link.png">';
