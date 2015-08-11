@@ -16,7 +16,7 @@ require_once(DOKU_PLUGIN.'syntax.php');
 
 class syntax_plugin_imagemap extends DokuWiki_Syntax_Plugin {
 
-    function syntax_plugin_imagemap() {
+    function __construct() {
     }
 
     function getInfo(){
@@ -228,7 +228,7 @@ class syntax_plugin_imagemap extends DokuWiki_Syntax_Plugin {
 
 }
 
-class ImageMap_Handler {
+class ImageMap_Handler implements Doku_Handler_CallWriter_Interface {
 
     var $CallWriter;
 
@@ -236,7 +236,7 @@ class ImageMap_Handler {
     var $areas = array();
     var $mapname;
 
-    function ImageMap_Handler($name, &$CallWriter) {
+    function __construct($name, &$CallWriter) {
         $this->CallWriter =& $CallWriter;
         $this->mapname = $name;
     }
