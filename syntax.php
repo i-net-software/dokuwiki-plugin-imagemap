@@ -231,8 +231,8 @@ class syntax_plugin_imagemap extends DokuWiki_Syntax_Plugin {
 /**
  * For DokuWiki versions before Destritus
  */
-if ( !class_exists("Doku_Handler_CallWriter_Interface") ) {
-  class Doku_Handler_CallWriter_Interface
+if ( !interface_exists("Doku_Handler_CallWriter_Interface") ) {
+  interface Doku_Handler_CallWriter_Interface
   {
   }
 }
