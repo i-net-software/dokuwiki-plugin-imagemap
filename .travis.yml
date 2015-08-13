@@ -1,4 +1,5 @@
 language: php
+sudo: false
 php:
   - "5.5"
   - "5.4"
@@ -8,7 +9,6 @@ env:
   - DOKUWIKI=stable
   - DOKUWIKI=old-stable
 before_install:
-  - "rm .gitignore"
   - "wget https://raw.github.com/splitbrain/dokuwiki-travis/master/travis.sh"
 install:
   - "sh travis.sh"
