@@ -1,6 +1,6 @@
 <?php
 /**
- * DokuWiki Plugin imagemap (Action Component)
+ * DokuWiki Plugin imagemap2 (Action Component)
  *
  * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
  * @author  Alexander Weggerle <AlexanderWeggerle.de>
@@ -15,7 +15,7 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 
 require_once DOKU_PLUGIN.'action.php';
 
-class action_plugin_imagemap extends DokuWiki_Action_Plugin {
+class action_plugin_imagemap2 extends DokuWiki_Action_Plugin {
 
     public function register(Doku_Event_Handler $controller) {
 
@@ -35,7 +35,7 @@ class action_plugin_imagemap extends DokuWiki_Action_Plugin {
         $event->data[] = array (
             'type' => 'imagemap',
             'title' => 'imagemap',
-            'icon' => '../../plugins/imagemap/map.png',
+            'icon' => '../../plugins/imagemap2/map.png',
             'list' => array(),
             );
 
