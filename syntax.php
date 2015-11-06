@@ -3,7 +3,9 @@
  * Image Map
  *
  * @license  GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author   Tom N Harris <tnharris@whoopdedo.org>
+ * @author   Tom N Harris <tools@inetsoftware.de>
+ * 
+ * Based upon the non public version by Tom N Harris
  */
 
 // must be run within Dokuwiki
