@@ -314,7 +314,7 @@ class ImageMap_Handler implements Doku_Handler_CallWriter_Interface {
             switch ($type) {
                 case 'plugin':
 
-                    if ( $plugin =& plugin_load('syntax', $data[0]) && method_exists($plugin, 'convertToImageMapArea')) {
+                    if ( $plugin = plugin_load('syntax', $data[0]) && method_exists($plugin, 'convertToImageMapArea')) {
                         $plugin->convertToImageMapArea($this, $data[1], $pos);
                         break;
                     }

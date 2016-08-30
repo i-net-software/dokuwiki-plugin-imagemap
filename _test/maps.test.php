@@ -26,7 +26,7 @@ class imagemap_maps_test extends DokuWikiTest {
             1 => array(
                 0 => 'plugin',
                 1 => array(
-                    0 => 'imagemap',
+                    0 => 'imagemapping',
                     1 => array(
                         0 => 1,
                         1 => 'internalmedia',
@@ -49,7 +49,7 @@ class imagemap_maps_test extends DokuWikiTest {
             2 => array(
                 0 => 'plugin',
                 1 => array(
-                    0 => 'imagemap',
+                    0 => 'imagemapping',
                     1 => array(
                         0 => 2,
                         1 => 'area',
@@ -72,7 +72,7 @@ class imagemap_maps_test extends DokuWikiTest {
                 0 => 'plugin',
                 1 => Array
                 (
-                    0 => 'imagemap',
+                    0 => 'imagemapping',
                     1 => Array
                     (
                         0 => 2,
@@ -102,7 +102,7 @@ class imagemap_maps_test extends DokuWikiTest {
                 0 => 'plugin',
                 1 => Array
                 (
-                    0 => 'imagemap',
+                    0 => 'imagemapping',
                     1 => Array
                     (
                         0 => '3',
@@ -134,7 +134,7 @@ class imagemap_maps_test extends DokuWikiTest {
                 0 => 'plugin',
                 1 => Array
                 (
-                    0 => 'imagemap',
+                    0 => 'imagemapping',
                     1 => Array
                     (
                         0 => 3,
@@ -155,7 +155,7 @@ class imagemap_maps_test extends DokuWikiTest {
                 0 => 'plugin',
                 1 => Array
                 (
-                    0 => 'imagemap',
+                    0 => 'imagemapping',
                     1 => Array
                     (
                         0 => 2,
@@ -173,7 +173,7 @@ class imagemap_maps_test extends DokuWikiTest {
                 0 => 'plugin',
                 1 => Array
                 (
-                    0 => 'imagemap',
+                    0 => 'imagemapping',
                     1 => Array
                     (
                         0 => 4,
