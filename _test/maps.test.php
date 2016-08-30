@@ -13,7 +13,7 @@ class imagemap_maps_test extends DokuWikiTest {
 
     }
 
-    protected $pluginsEnabled = array('imagemap');
+    protected $pluginsEnabled = array('imagemapping');
 
     public function test_simple_map() {
         $parser_response = p_get_instructions('{{map>:512px-catstalkprey.jpg|Bild1422436366012}}   * [[foo|bar@ 354,185,437,251]] {{<map}}');
