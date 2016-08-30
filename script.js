@@ -52,7 +52,7 @@ function addBtnActionImagemap(btn, props, edid) {
 
         //parse input
         if (!imagemap.parseInput(imagemap.selection.getText())) {
-            alert(LANG['plugins']['imagemap']['please_mark']);
+            alert(LANG['plugins']['imagemapping']['please_mark']);
         } else {
             document.getElementById('imagemap_fade').style.display = 'block';
             document.getElementById('imagemap_light').style.display = 'block';

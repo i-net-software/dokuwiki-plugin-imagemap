@@ -1,7 +1,7 @@
-base    imagemap
-author  Gerry Weißbach /  Michael Große
+base    imagemapping
+author  Gerry Weißbach / Michael Große
 email   tools@inetsoftware.de
-date    2015-11-06
+date    2016-08-30
 name    Image Map Plugin
-desc    Create client-side image maps. Based upon the non-public version by Tom N Harris
+desc    Create client-side image maps. Derived from the Version of Tom N Harris
 url     https://github.com/i-net-software/dokuwiki-plugin-imagemap

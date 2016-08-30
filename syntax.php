@@ -16,7 +16,7 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
 
 require_once(DOKU_PLUGIN.'syntax.php');
 
-class syntax_plugin_imagemap extends DokuWiki_Syntax_Plugin {
+class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
 
     function __construct() {
     }
@@ -29,10 +29,10 @@ class syntax_plugin_imagemap extends DokuWiki_Syntax_Plugin {
     }
 
     function connectTo($mode) {
-        $this->Lexer->addEntryPattern('\{\{map>[^\}]+\}\}', $mode, 'plugin_imagemap');
+        $this->Lexer->addEntryPattern('\{\{map>[^\}]+\}\}', $mode, 'plugin_imagemapping');
     }
     function postConnect() {
-        $this->Lexer->addExitPattern('\{\{<map\}\}', 'plugin_imagemap');
+        $this->Lexer->addExitPattern('\{\{<map\}\}', 'plugin_imagemapping');
     }
 
     function handle($match, $state, $pos, Doku_Handler $handler){
@@ -274,7 +274,7 @@ class ImageMap_Handler implements Doku_Handler_CallWriter_Interface {
 
     function _addPluginCall($args, $pos) {
         $this->CallWriter->writeCall(array('plugin',
-                                           array('imagemap', $args, $args[0]),
+                                           array('imagemapping', $args, $args[0]),
                                            $pos));
     }
 
@@ -305,7 +305,7 @@ class ImageMap_Handler implements Doku_Handler_CallWriter_Interface {
             switch ($type) {
                 case 'plugin':
 
-                    if ( $plugin =& plugin_load('syntax', $data[0]) && method_exists($plugin, 'convertToImageMapArea')) {
+                    if ( $plugin = plugin_load('syntax', $data[0]) && method_exists($plugin, 'convertToImageMapArea')) {
                         $plugin->convertToImageMapArea($this, $data[1], $pos);
                         break;
                     }
