@@ -3,7 +3,9 @@
  * Image Map
  *
  * @license  GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author   Tom N Harris <tnharris@whoopdedo.org>
+ * @author   Tom N Harris <tools@inetsoftware.de>
+ * 
+ * Based upon the non public version by Tom N Harris
  */
 
 // must be run within Dokuwiki
@@ -17,17 +19,6 @@ require_once(DOKU_PLUGIN.'syntax.php');
 class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
 
     function __construct() {
-    }
-
-    function getInfo(){
-        return array(
-            'author' => 'Tom N Harris',
-            'email'  => 'tnharris@whoopdedo.org',
-            'date'   => '2012-05-31',
-            'name'   => 'Image Map Plugin',
-            'desc'   => 'Create client-side image maps.',
-            'url'    => 'http://whoopdedo.org/doku/wiki/imagemap',
-        );
     }
 
     function getType(){ return 'container'; }
