@@ -60,7 +60,10 @@
 				}).attr('src', $that.attr('src'));
 			});
 		};
-		$(window).resize(rwdImageMap).trigger('resize');
+		
+		if ( $img.length > 0 ) {
+    		$(window).resize(rwdImageMap).trigger('resize');
+		}
 		
 		return this;
 	};
