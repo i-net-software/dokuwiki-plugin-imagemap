@@ -230,11 +230,11 @@ if ( !interface_exists("Doku_Handler_CallWriter_Interface") ) {
 
 class ImageMap_Handler implements Doku_Handler_CallWriter_Interface {
 
-    var $CallWriter;
+    private $CallWriter;
 
-    var $calls = array();
-    var $areas = array();
-    var $mapname;
+    private $calls = array();
+    private $areas = array();
+    private $mapname;
 
     function __construct($name, &$CallWriter) {
         $this->CallWriter =& $CallWriter;
