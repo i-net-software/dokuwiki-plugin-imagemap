@@ -230,7 +230,7 @@ if ( !interface_exists("Doku_Handler_CallWriter_Interface") ) {
 
 class ImageMap_Handler implements Doku_Handler_CallWriter_Interface {
 
-    private $CallWriter;
+    public $CallWriter;
 
     private $calls = array();
     private $areas = array();
