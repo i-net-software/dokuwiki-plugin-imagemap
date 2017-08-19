@@ -22,6 +22,7 @@ capable of it.) There will be three links in the image:
   * An interwiki link in a circle.
   * An external link in a polygon. The link is defined with an image, 
     so the alternate text of the image is used for the map.
+  * A link to a media file
 
 For a link to be used in the map, it must define the shape as part of the 
 link text. This is done with the ''@'' character followed by a list of 
