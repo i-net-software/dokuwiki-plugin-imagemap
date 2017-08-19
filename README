@@ -13,6 +13,7 @@ browsers.
     * [[wikipage|Description @ 10,12,40,30]]
     * [[wp>image_map|An interwiki link @ 110,50,40]]
     * [[http://w3.org/|{{w3c-logo.png|Even image links work @10,115,80,95,150,115,80,135}}]]
+    * {{example.pdf|Direct link to a media file @ 200,100,80,60}}
   {{<map}}
 
 This example will display the image ''media_link''. (if the browser is 
