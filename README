@@ -17,7 +17,7 @@ browsers.
   {{<map}}
 
 This example will display the image ''media_link''. (if the browser is 
-capable of it.) There will be three links in the image:
+capable of it.) There will be four links in the image:
   * A link to the wiki page ''wikipage'' in a rectangle.
   * An interwiki link in a circle.
   * An external link in a polygon. The link is defined with an image, 
