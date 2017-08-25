@@ -167,6 +167,14 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
                                 $url = 'file:///'.$url;
                                 $target = $conf['target']['windows'];
                                 break;
+                            case 'internalmedia':
+                                list($url,$hash) = explode('#',$url,2);
+                                resolve_mediaid(getNS($ID), $url, $exists);
+                                $title = $renderer->_media($url, $title, null,null,null,null, false);
+                                $url = ml($url, ($extra[1]=='direct'));
+                                if ($hash)
+                                    $url .= '#'.$hash;
+                                break;
                         }
                         if($url){
                             $renderer->doc .= '<area href="'.$url.'"';
