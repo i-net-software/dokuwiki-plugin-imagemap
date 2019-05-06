@@ -181,7 +181,8 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
                             if (!empty($target))
                                 $renderer->doc .= ' target="'.$target.'"';
                             $renderer->doc .= ' title="'.$title.'" alt="'.$title.'"';
-                            $renderer->doc .= ' shape="'.$shape.'" coords="'.$coords.'" />';
+
+                            $renderer->doc .= ' shape="'.$shape.'" coords="'.$coords.'"/>';
                         }
                     } elseif ($data[1]=='divstart') {
                         $renderer->doc .= DOKU_LF.'<div class="imapcontent">'.DOKU_LF;
@@ -300,7 +301,11 @@ class ImageMap_Handler implements Doku_Handler_CallWriter_Interface {
             }
             $coords = array_map('trim', $coords);
             $title = trim($match[1]);
-            $this->_addPluginCall(array(DOKU_LEXER_MATCHED, 'area', $shape, join(',',$coords),
+            
+			$coords = join(',',$coords);
+			$coords = trim( $coords );
+            
+            $this->_addPluginCall(array(DOKU_LEXER_MATCHED, 'area', $shape, $coords,
                                         $type, $title, $url, $wiki), $pos);
         }
         return $title;
