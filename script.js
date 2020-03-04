@@ -8,5 +8,11 @@ jQuery(document).ready(function(e) {
         wrapCss: true,
         clickNavigate: true
     });
+    
+    jQuery(window).resize(function(){
+		jQuery('img[usemap]').each(function() {
+			$(this).mapster('resize', $(this.offsetParent.offsetParent).width());
+		});
+    });
 });
 
