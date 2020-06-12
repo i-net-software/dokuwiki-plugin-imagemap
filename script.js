@@ -16,3 +16,6 @@ jQuery(document).ready(function(e) {
     });
 });
 
+function addBtnActionImagemap(btn, props, edid) {
+  // Not implemented yet
+}
