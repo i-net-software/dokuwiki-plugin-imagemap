@@ -39,6 +39,7 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
         global $conf;
         global $ID;
         $args = array($state);
+
         switch ($state) {
             case DOKU_LEXER_ENTER:
                 $img = Doku_Handler_Parse_Media(substr($match, 6, -2));
@@ -65,13 +66,13 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
                               $img['align'], $img['width'], $img['height'],
                               $img['cache']);
 
-                $ReWriter = new ImageMap_Handler($mapname, $handler->CallWriter);
-                $handler->CallWriter =& $ReWriter;
-                break;
+                $ReWriter = new ImageMap_Handler($mapname, $handler->getCallWriter());
+                $handler->setCallWriter( $ReWriter );
+            break;
             case DOKU_LEXER_EXIT:
-                $handler->CallWriter->process();
-                $ReWriter =& $handler->CallWriter;
-                $handler->CallWriter =& $ReWriter->CallWriter;
+                $handler->getCallWriter()->process();
+                $ReWriter = $handler->getCallWriter();
+                $handler->setCallWriter( $ReWriter->CallWriter );
                 break;
             case DOKU_LEXER_MATCHED:
                 break;
@@ -228,16 +229,7 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
 
 }
 
-/**
- * For DokuWiki versions before Destritus
- */
-if ( !interface_exists("Doku_Handler_CallWriter_Interface") ) {
-  interface Doku_Handler_CallWriter_Interface
-  {
-  }
-}
-
-class ImageMap_Handler implements Doku_Handler_CallWriter_Interface {
+class ImageMap_Handler implements dokuwiki\Parsing\Handler\CallWriterInterface {
 
     public $CallWriter;
 
