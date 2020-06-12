@@ -13,4 +13,4 @@ before_install:
 install:
   - "sh travis.sh"
 script:
-  - "cd _test && phpunit --stderr --group plugin_imagemap"
+  - "cd _test && php phpunit.phar --stderr --group plugin_imagemap"
