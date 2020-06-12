@@ -16,8 +16,6 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
 
 require_once(DOKU_PLUGIN.'syntax.php');
 
-use dokuwiki\Parsing\Handler\CallWriterInterface;
-
 class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
 
     function __construct() {
@@ -68,13 +66,24 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
                               $img['align'], $img['width'], $img['height'],
                               $img['cache']);
 
-                $ReWriter = new ImageMap_Handler($mapname, $handler->getCallWriter());
-                $handler->setCallWriter( $ReWriter );
+                if ( $handler->CallWriter ) {
+                    $ReWriter = new ImageMap_Handler($mapname, $handler->CallWriter);
+                    $handler->CallWriter =& $ReWriter;
+                } else {
+                    $ReWriter = new ImageMap_Handler($mapname, $handler->getCallWriter());
+                    $handler->setCallWriter( $ReWriter );
+                }
             break;
             case DOKU_LEXER_EXIT:
-                $handler->getCallWriter()->process();
-                $ReWriter = $handler->getCallWriter();
-                $handler->setCallWriter( $ReWriter->CallWriter );
+                if ( $handler->CallWriter ) {
+                    $handler->CallWriter->process();
+                    $ReWriter = $handler->CallWriter;
+                    $handler->CallWriter =& $ReWriter->CallWriter;
+                } else {
+                    $handler->getCallWriter()->process();
+                    $ReWriter = $handler->getCallWriter();
+                    $handler->setCallWriter( $ReWriter->CallWriter );
+                }
                 break;
             case DOKU_LEXER_MATCHED:
                 break;
@@ -231,7 +240,22 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
 
 }
 
-class ImageMap_Handler implements dokuwiki\Parsing\Handler\CallWriterInterface {
+if ( interface_exists( "dokuwiki\Parsing\Handler\CallWriterInterface", true ) ) {
+    // interface does not exist. DW too old?!
+    interface InternalCallWriterInterface extends dokuwiki\Parsing\Handler\CallWriterInterface {
+    }
+
+} else {
+    if ( !interface_exists("Doku_Handler_CallWriter_Interface") ) {
+        interface Doku_Handler_CallWriter_Interface {}
+    }
+
+    // interface does not exist. DW too old?!
+    interface InternalCallWriterInterface extends Doku_Handler_CallWriter_Interface {
+    }
+}
+
+class ImageMap_Handler implements InternalCallWriterInterface {
 
     public $CallWriter;
 
