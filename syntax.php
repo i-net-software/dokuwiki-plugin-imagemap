@@ -16,6 +16,8 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
 
 require_once(DOKU_PLUGIN.'syntax.php');
 
+use dokuwiki\Parsing\Handler\CallWriterInterface;
+
 class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
 
     function __construct() {
