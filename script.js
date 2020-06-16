@@ -14,7 +14,7 @@
 
     $(window).resize(function(){
         $('img[usemap]').each(function() {
-            $(this).mapster('resize', $(this.offsetParent.offsetParent).width());
+            $(this).mapster('resize', $(this.offsetParent).width());
         });
     });
 
