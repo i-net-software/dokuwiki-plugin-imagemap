@@ -8,11 +8,6 @@
  */
 class imagemap_maps_test extends DokuWikiTest {
 
-    public function setUp() {
-        parent::setUp();
-
-    }
-
     protected $pluginsEnabled = array('imagemapping');
 
     public function test_simple_map() {
