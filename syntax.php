@@ -1,6 +1,7 @@
 <?php
 
 use dokuwiki\Parsing\Handler\CallWriterInterface;
+use dokuwiki\plugin\imagemapping\ImageMapHandler;
 
 /**
  * Image Mapping Plugin: Syntax component
@@ -80,18 +81,18 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin
                         $mapname = 'imagemap' . $pos;
                     }
                 }
-                $args = array($state, $img['type'], $img['src'], $img['title'], $mapname,
+                $args = [$state, $img['type'], $img['src'], $img['title'], $mapname,
                     $img['align'], $img['width'], $img['height'],
-                    $img['cache']);
+                    $img['cache']];
 
-                $ReWriter = new ImageMap_Handler($mapname, $handler->getCallWriter());
+                $ReWriter = new ImageMapHandler($mapname, $handler->getCallWriter());
                 $handler->setCallWriter($ReWriter);
-
                 break;
             case DOKU_LEXER_EXIT:
-                $handler->getCallWriter()->process();
+                // @var ImageMapHandler $ReWriter
                 $ReWriter = $handler->getCallWriter();
-                $handler->setCallWriter($ReWriter->CallWriter);
+                $ReWriter->process();
+                $handler->setCallWriter($ReWriter->getCallWriter());
                 break;
             case DOKU_LEXER_MATCHED:
                 break;
@@ -249,133 +250,3 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin
 
 }
 
-class ImageMap_Handler implements CallWriterInterface
-{
-
-    public $CallWriter;
-
-    private $calls = array();
-    private $areas = array();
-    private $mapname;
-
-    function __construct($name, CallWriterInterface $CallWriter)
-    {
-        $this->CallWriter = $CallWriter;
-        $this->mapname = $name;
-    }
-
-    function writeCall($call)
-    {
-        $this->calls[] = $call;
-    }
-
-    function writeCalls($calls)
-    {
-        $this->calls = array_merge($this->calls, $calls);
-    }
-
-    function finalise()
-    {
-        $last_call = end($this->calls);
-        $this->process();
-        $this->_addPluginCall(array(DOKU_LEXER_EXIT), $last_call[2]);
-        $this->CallWriter->finalise();
-    }
-
-    function process()
-    {
-        $last_call = end($this->calls);
-        $first_call = array_shift($this->calls);
-
-        $this->CallWriter->writeCall($first_call);
-        $this->_processLinks($first_call[2]);
-
-        if (!empty($this->calls)) {
-            $this->_addPluginCall(array(DOKU_LEXER_MATCHED, 'divstart'), $first_call[2]);
-            //Force a new paragraph
-            $this->CallWriter->writeCall(array('eol', array(), $this->calls[0][2]));
-            $this->CallWriter->writeCalls($this->calls);
-            $this->_addPluginCall(array(DOKU_LEXER_MATCHED, 'divend'), $last_call[2]);
-        }
-    }
-
-    function _addPluginCall($args, $pos)
-    {
-        $this->CallWriter->writeCall(array('plugin',
-            array('imagemapping', $args, $args[0]),
-            $pos));
-    }
-
-    function _addArea($pos, $type, $title, $url, $wiki = null)
-    {
-        if (preg_match('/^(.*)@([^@]+)$/u', $title, $match)) {
-            $coords = explode(',', $match[2]);
-            if (count($coords) == 3) {
-                $shape = 'circle';
-            } elseif (count($coords) == 4) {
-                $shape = 'rect';
-            } elseif (count($coords) >= 6) {
-                $shape = 'poly';
-            } else {
-                return $title;
-            }
-            $coords = array_map('trim', $coords);
-            $title = trim($match[1]);
-
-            $coords = join(',', $coords);
-            $coords = trim($coords);
-
-            $this->_addPluginCall(array(DOKU_LEXER_MATCHED, 'area', $shape, $coords,
-                $type, $title, $url, $wiki), $pos);
-        }
-        return $title;
-    }
-
-    function _processLinks($pos)
-    {
-        for ($n = 0; $n < count($this->calls); $n++) {
-            $data =& $this->calls[$n][1];
-            $type = $this->calls[$n][0];
-            switch ($type) {
-                case 'plugin':
-
-                    $plugin = plugin_load('syntax', $data[0]);
-                    if ($plugin != null && method_exists($plugin, 'convertToImageMapArea')) {
-                        $plugin->convertToImageMapArea($this, $data[1], $pos);
-                        break;
-                    }
-                case 'internallink':
-                case 'locallink':
-                case 'externallink':
-                case 'emaillink':
-                case 'windowssharelink':
-                    if (is_array($data[1])) {
-                        $title = $data[1]['title'] ?? '';
-                    } else {
-                        $title = $data[1];
-                    }
-                    $title = $this->_addArea($pos, $type, $title, $data[0]);
-                    if (is_array($data[1])) {
-                        $data[1]['title'] = $title;
-                    } else {
-                        $data[1] = $title;
-                    }
-                    break;
-                case 'interwikilink':
-                    if (is_array($data[1])) {
-                        $title = $data[1]['title'];
-                    } else {
-                        $title = $data[1];
-                    }
-                    $title = $this->_addArea($pos, $type, $title, $data[3], $data[2]);
-                    if (is_array($data[1])) {
-                        $data[1]['title'] = $title;
-                    } else {
-                        $data[1] = $title;
-                    }
-                    break;
-            }
-        }
-    }
-
-}

@@ -27,7 +27,7 @@ class MapsTest extends \DokuWikiTest
                 1 => [
                     0 => 'imagemapping',
                     1 => [
-                        0 => 1,
+                        0 => DOKU_LEXER_ENTER,
                         1 => 'internalmedia',
                         2 => ':512px-catstalkprey.jpg',
                         3 => 'Bild1422436366012',
@@ -38,7 +38,7 @@ class MapsTest extends \DokuWikiTest
                         8 => 'cache',
                     ],
 
-                    2 => 1,
+                    2 => DOKU_LEXER_ENTER,
                     3 => '{{map>:512px-catstalkprey.jpg|Bild1422436366012}}',
                 ],
 
@@ -50,7 +50,7 @@ class MapsTest extends \DokuWikiTest
                 1 => [
                     0 => 'imagemapping',
                     1 => [
-                        0 => 2,
+                        0 => DOKU_LEXER_MATCHED,
                         1 => 'area',
                         2 => 'rect',
                         3 => '354,185,437,251',
@@ -60,7 +60,7 @@ class MapsTest extends \DokuWikiTest
                         7 => '',
                     ],
 
-                    2 => 2,
+                    2 => DOKU_LEXER_MATCHED,
                 ],
 
                 2 => 1,
@@ -74,11 +74,11 @@ class MapsTest extends \DokuWikiTest
                             0 => 'imagemapping',
                             1 =>
                                 [
-                                    0 => 2,
+                                    0 => DOKU_LEXER_MATCHED,
                                     1 => 'divstart',
                                 ],
 
-                            2 => 2,
+                            2 => DOKU_LEXER_MATCHED,
                         ],
 
                     2 => 1,
@@ -104,12 +104,11 @@ class MapsTest extends \DokuWikiTest
                             0 => 'imagemapping',
                             1 =>
                                 [
-                                    0 => '3',
+                                    0 => DOKU_LEXER_UNMATCHED,
                                     1 => '   * ',
-                                    'title' => null,
                                 ],
 
-                            2 => '3',
+                            2 => DOKU_LEXER_UNMATCHED,
                             3 => '   * ',
                         ],
 
@@ -136,12 +135,11 @@ class MapsTest extends \DokuWikiTest
                             0 => 'imagemapping',
                             1 =>
                                 [
-                                    0 => 3,
+                                    0 => DOKU_LEXER_UNMATCHED,
                                     1 => ' ',
-                                    'title' => null,
                                 ],
 
-                            2 => 3,
+                            2 => DOKU_LEXER_UNMATCHED,
                             3 => ' ',
                         ],
 
@@ -156,11 +154,11 @@ class MapsTest extends \DokuWikiTest
                             0 => 'imagemapping',
                             1 =>
                                 [
-                                    0 => 2,
+                                    0 => DOKU_LEXER_MATCHED,
                                     1 => 'divend',
                                 ],
 
-                            2 => 2,
+                            2 => DOKU_LEXER_MATCHED,
                         ],
 
                     2 => 83,
@@ -174,10 +172,10 @@ class MapsTest extends \DokuWikiTest
                             0 => 'imagemapping',
                             1 =>
                                 [
-                                    0 => 4,
+                                    0 => DOKU_LEXER_EXIT,
                                 ],
 
-                            2 => 4,
+                            2 => DOKU_LEXER_EXIT,
                             3 => '{{<map}}',
                         ],
 
