@@ -119,7 +119,7 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin
                     }
                     $renderer->doc .= '<p>' . DOKU_LF;
                     $src = ml($src, array('w' => $width, 'h' => $height, 'cache' => $cache));
-                    $renderer->doc .= ' <img src="' . $src . '" class="media' . $align . ' imap" usemap="#' . $name . '"';
+                    $renderer->doc .= ' <img src="' . $src . '" class="media' . $align . ' imagemapping-map" usemap="#' . $name . '"';
                     if ($align == 'right' || $align == 'left')
                         $renderer->doc .= ' align="' . $align . '"';
                     if (!is_null($title)) {
@@ -208,7 +208,7 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin
                             $renderer->doc .= ' shape="' . $shape . '" coords="' . $coords . '"/>';
                         }
                     } elseif ($data[1] == 'divstart') {
-                        $renderer->doc .= DOKU_LF . '<div class="imapcontent">' . DOKU_LF;
+                        $renderer->doc .= DOKU_LF . '<div class="imagemapping-content">' . DOKU_LF;
                         $has_content = true;
                     } elseif ($data[1] == 'divend') {
                         $renderer->doc .= DOKU_LF;//.'</div>'.DOKU_LF;

@@ -1,0 +1,38 @@
+.plugin-imagemapping {
+
+    svg {
+        width: 100%;
+        height: initial;
+        max-height: 100%;
+
+        circle.handle {
+            cursor: move;
+            fill: @ini_link;
+            opacity: 0.5;
+        }
+
+        g {
+            fill: none;
+            stroke: @ini_link;
+            stroke-width: 2;
+        }
+    }
+
+
+}
+
+// normally hide content
+.dokuwiki map div.imagemapping-content {
+    display: none;
+}
+
+// display content, but hide image on assistave devices
+@media aural, braille, tty {
+    .dokuwiki div.imapcontent {
+        display: block;
+    }
+
+    .dokuwiki img.imagemapping-map {
+        display: none;
+    }
+}
