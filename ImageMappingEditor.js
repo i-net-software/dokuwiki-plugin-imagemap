@@ -57,7 +57,7 @@ class ImageMappingEditor {
             // no map syntax found, check if we are inside an image
             const img = this.elementBoundary('{{', '}}');
             if (!img) {
-                alert('The image map editor can only be used with the cursor positioned on images or existing image maps.');
+                alert(LANG.plugins.imagemapping.wrongcontext);
                 return false;
             }
 
