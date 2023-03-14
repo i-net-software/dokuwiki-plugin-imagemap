@@ -73,7 +73,6 @@ class ImageMappingEditor {
             this.imgurl = this.constructImgUrl(area.value.substring(map.start, area.value.indexOf('}}', map.start)));
 
             // check if a link is selected
-            debugger;
             let link = this.elementBoundary('[[', ']]', map.start, map.end);
             if (link) {
                 // we are in a link, adjust it if it's an image link
