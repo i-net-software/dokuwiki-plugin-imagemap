@@ -1,41 +1,60 @@
 <?php
+
+use dokuwiki\Parsing\Handler\CallWriterInterface;
+use dokuwiki\plugin\imagemapping\ImageMapHandler;
+
 /**
- * Image Map
+ * Image Mapping Plugin: Syntax component
  *
  * @license  GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @author   Gerry Weißbach <tools@inetsoftware.de>
+ * @author   Michael Große <dokuwiki@cosmocode.de>
  * @author   Tom N Harris <tools@inetsoftware.de>
- * 
+ *
  * Based upon the non public version by Tom N Harris
  */
+class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin
+{
 
-// must be run within Dokuwiki
-if (!defined('DOKU_INC')) die();
-
-if (!defined('DOKU_LF')) define('DOKU_LF', "\n");
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
-
-require_once(DOKU_PLUGIN.'syntax.php');
-
-class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
-
-    function __construct() {
+    /** @inheritdoc */
+    function getType()
+    {
+        return 'container';
     }
 
-    function getType(){ return 'container'; }
-    function getSort(){ return 316; }
-    function getPType(){ return 'block';}
-    function getAllowedTypes() {
-        return array('formatting','substition','disabled','protected','container','paragraphs');
+    /** @inheritdoc */
+    function getSort()
+    {
+        return 316;
     }
 
-    function connectTo($mode) {
+    /** @inheritdoc */
+    function getPType()
+    {
+        return 'block';
+    }
+
+    /** @inheritdoc */
+    function getAllowedTypes()
+    {
+        return array('formatting', 'substition', 'disabled', 'protected', 'container', 'paragraphs');
+    }
+
+    /** @inheritdoc */
+    function connectTo($mode)
+    {
         $this->Lexer->addEntryPattern('\{\{map>[^\}]+\}\}', $mode, 'plugin_imagemapping');
     }
-    function postConnect() {
+
+    /** @inheritdoc */
+    function postConnect()
+    {
         $this->Lexer->addExitPattern('\{\{<map\}\}', 'plugin_imagemapping');
     }
 
-    function handle($match, $state, $pos, Doku_Handler $handler){
+    /** @inheritdoc */
+    function handle($match, $state, $pos, Doku_Handler $handler)
+    {
         global $conf;
         global $ID;
         $args = array($state);
@@ -44,46 +63,36 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
             case DOKU_LEXER_ENTER:
                 $img = Doku_Handler_Parse_Media(substr($match, 6, -2));
                 if ($img['title']) {
-                    $mapname = str_replace(':','',cleanID($img['title']));
+                    $mapname = str_replace(':', '', cleanID($img['title']));
                     $mapname = ltrim($mapname, '0123456789._-');
                 }
                 if (empty($mapname)) {
                     if ($img['type'] == 'internalmedia') {
                         $src = $img['src'];
-                        resolve_mediaid(getNS($ID),$src, $exists);
+                        resolve_mediaid(getNS($ID), $src, $exists);
                         $nssep = ($conf['useslash']) ? '[:;/]' : '[:;]';
-                        $mapname = preg_replace('!.*'.$nssep.'!','',$src);
+                        $mapname = preg_replace('!.*' . $nssep . '!', '', $src);
                     } else {
                         $src = parse_url($img['src']);
-                        $mapname = str_replace(':','',cleanID($src['host'].$src['path'].$src['query']));
+                        $mapname = str_replace(':', '', cleanID($src['host'] . $src['path'] . $src['query']));
                         $mapname = ltrim($mapname, '0123456789._-');
                     }
                     if (empty($mapname)) {
-                        $mapname = 'imagemap'.$pos;
+                        $mapname = 'imagemap' . $pos;
                     }
                 }
-                $args = array($state, $img['type'], $img['src'], $img['title'], $mapname,
-                              $img['align'], $img['width'], $img['height'],
-                              $img['cache']);
+                $args = [$state, $img['type'], $img['src'], $img['title'], $mapname,
+                    $img['align'], $img['width'], $img['height'],
+                    $img['cache']];
 
-                if ( $handler->CallWriter ) {
-                    $ReWriter = new ImageMap_Handler($mapname, $handler->CallWriter);
-                    $handler->CallWriter =& $ReWriter;
-                } else {
-                    $ReWriter = new ImageMap_Handler($mapname, $handler->getCallWriter());
-                    $handler->setCallWriter( $ReWriter );
-                }
-            break;
+                $ReWriter = new ImageMapHandler($mapname, $handler->getCallWriter());
+                $handler->setCallWriter($ReWriter);
+                break;
             case DOKU_LEXER_EXIT:
-                if ( $handler->CallWriter ) {
-                    $handler->CallWriter->process();
-                    $ReWriter = $handler->CallWriter;
-                    $handler->CallWriter =& $ReWriter->CallWriter;
-                } else {
-                    $handler->getCallWriter()->process();
-                    $ReWriter = $handler->getCallWriter();
-                    $handler->setCallWriter( $ReWriter->CallWriter );
-                }
+                // @var ImageMapHandler $ReWriter
+                $ReWriter = $handler->getCallWriter();
+                $ReWriter->process();
+                $handler->setCallWriter($ReWriter->getCallWriter());
                 break;
             case DOKU_LEXER_MATCHED:
                 break;
@@ -94,73 +103,75 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
         return $args;
     }
 
-    function render($format, Doku_Renderer $renderer, $data) {
+    /** @inheritdoc */
+    function render($format, Doku_Renderer $renderer, $data)
+    {
         global $conf;
         global $ID;
-        static $has_content=false;
+        static $has_content = false;
         $state = $data[0];
-        if (substr($format,0,5) == 'xhtml') {
+        if (substr($format, 0, 5) == 'xhtml') {
             switch ($state) {
                 case DOKU_LEXER_ENTER:
-                    list($state,$type,$src,$title,$name,$align,$width,$height,$cache) = $data;
-                    if ($type=='internalmedia') {
-                        resolve_mediaid(getNS($ID),$src, $exists);
+                    list($state, $type, $src, $title, $name, $align, $width, $height, $cache) = $data;
+                    if ($type == 'internalmedia') {
+                        resolve_mediaid(getNS($ID), $src, $exists);
                     }
-                    $renderer->doc .= '<p>'.DOKU_LF;
-                    $src = ml($src,array('w'=>$width,'h'=>$height,'cache'=>$cache));
-                    $renderer->doc .= ' <img src="'.$src.'" class="media'.$align.' imap" usemap="#'.$name.'"';
-                    if($align == 'right' || $align == 'left')
-                        $renderer->doc .= ' align="'.$align.'"';
+                    $renderer->doc .= '<p>' . DOKU_LF;
+                    $src = ml($src, array('w' => $width, 'h' => $height, 'cache' => $cache));
+                    $renderer->doc .= ' <img src="' . $src . '" class="media' . $align . ' imagemapping-map" usemap="#' . $name . '"';
+                    if ($align == 'right' || $align == 'left')
+                        $renderer->doc .= ' align="' . $align . '"';
                     if (!is_null($title)) {
                         $title = $renderer->_xmlEntities($title);
-                        $renderer->doc .= ' title="'.$title.'"';
-                        $renderer->doc .= ' alt="'.$title.'"';
+                        $renderer->doc .= ' title="' . $title . '"';
+                        $renderer->doc .= ' alt="' . $title . '"';
                     } else {
                         $renderer->doc .= ' alt=""';
                     }
                     if (!is_null($width))
-                        $renderer->doc .= ' width="'.$renderer->_xmlEntities($width).'"';
+                        $renderer->doc .= ' width="' . $renderer->_xmlEntities($width) . '"';
                     if (!is_null($height))
-                        $renderer->doc .= ' height="'.$renderer->_xmlEntities($height).'"';
-                    $renderer->doc .= ' />'.DOKU_LF;
-                    $renderer->doc .= '</p>'.DOKU_LF;
-                    $renderer->doc .= '<map name="'.$name.'" id="'.$name.'">'.DOKU_LF;
+                        $renderer->doc .= ' height="' . $renderer->_xmlEntities($height) . '"';
+                    $renderer->doc .= ' />' . DOKU_LF;
+                    $renderer->doc .= '</p>' . DOKU_LF;
+                    $renderer->doc .= '<map name="' . $name . '" id="' . $name . '">' . DOKU_LF;
                     $has_content = false;
                     break;
                 case DOKU_LEXER_MATCHED:
-                    if ($data[1]=='area') {
-                        @list($state,$match,$shape,$coords,$type,$title,$url,$wiki) = $data;
+                    if ($data[1] == 'area') {
+                        @list($state, $match, $shape, $coords, $type, $title, $url, $wiki) = $data;
                         $target = '';
                         switch ($type) {
                             case 'internallink':
                                 if ($url === '') $url = $ID;
                                 $default = $renderer->_simpleTitle($url);
-                                resolve_pageid(getNS($ID),$url,$exists);
+                                resolve_pageid(getNS($ID), $url, $exists);
                                 $title = $renderer->_getLinkTitle($title, $default, $isImg, $url);
-                                list($url,$hash) = explode('#',$url,2);
+                                list($url, $hash) = explode('#', $url, 2);
                                 if (!empty($hash)) $hash = $renderer->_headerToLink($hash);
                                 $url = wl($url);
-                                if ($hash) $url .= '#'.$hash;
+                                if ($hash) $url .= '#' . $hash;
                                 $target = $conf['target']['wiki'];
                                 break;
                             case 'locallink':
                                 $title = $renderer->_getLinkTitle($title, $url, $isImg);
                                 $url = $renderer->_headerToLink($url);
-                                $url = '#'.$url;
+                                $url = '#' . $url;
                                 break;
                             case 'externallink':
                                 $title = $renderer->_getLinkTitle($title, $url, $isImg);
                                 // url might be an attack vector, only allow registered protocols
-                                if(is_null($this->schemes)) $this->schemes = getSchemes();
-                                list($scheme) = explode('://',$url);
+                                if (is_null($this->schemes)) $this->schemes = getSchemes();
+                                list($scheme) = explode('://', $url);
                                 $scheme = strtolower($scheme);
-                                if(!in_array($scheme,$this->schemes)) $url = '';
+                                if (!in_array($scheme, $this->schemes)) $url = '';
                                 $target = $conf['target']['extern'];
                                 break;
                             case 'interwikilink':
                                 $title = $renderer->_getLinkTitle($title, $url, $isImg);
-                                $url = $renderer->_resolveInterWiki($wiki,$url);
-                                if (strpos($url,DOKU_URL) === 0)
+                                $url = $renderer->_resolveInterWiki($wiki, $url);
+                                if (strpos($url, DOKU_URL) === 0)
                                     $target = $conf['target']['wiki'];
                                 else
                                     $target = $conf['target']['interwiki'];
@@ -171,40 +182,40 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
                                 $title = $renderer->_getLinkTitle($title, $url, $isImg);
                                 if ($conf['mailguard'] == 'visible')
                                     $url = rawurlencode($url);
-                                $url = 'mailto:'.$url;
+                                $url = 'mailto:' . $url;
                                 break;
                             case 'windowssharelink':
                                 $title = $renderer->_getLinkTitle($title, $url, $isImg);
-                                $url = str_replace('\\','/',$url);
-                                $url = 'file:///'.$url;
+                                $url = str_replace('\\', '/', $url);
+                                $url = 'file:///' . $url;
                                 $target = $conf['target']['windows'];
                                 break;
                             case 'internalmedia':
-                                list($url,$hash) = explode('#',$url,2);
+                                list($url, $hash) = explode('#', $url, 2);
                                 resolve_mediaid(getNS($ID), $url, $exists);
-                                $title = $renderer->_media($url, $title, null,null,null,null, false);
-                                $url = ml($url, ($extra[1]=='direct'));
+                                $title = $renderer->_media($url, $title, null, null, null, null, false);
+                                $url = ml($url, ($extra[1] == 'direct'));
                                 if ($hash)
-                                    $url .= '#'.$hash;
+                                    $url .= '#' . $hash;
                                 break;
                         }
-                        if($url){
-                            $renderer->doc .= '<area href="'.$url.'"';
+                        if ($url) {
+                            $renderer->doc .= '<area href="' . $url . '"';
                             if (!empty($target))
-                                $renderer->doc .= ' target="'.$target.'"';
-                            $renderer->doc .= ' title="'.$title.'" alt="'.$title.'"';
+                                $renderer->doc .= ' target="' . $target . '"';
+                            $renderer->doc .= ' title="' . $title . '" alt="' . $title . '"';
 
-                            $renderer->doc .= ' shape="'.$shape.'" coords="'.$coords.'"/>';
+                            $renderer->doc .= ' shape="' . $shape . '" coords="' . $coords . '"/>';
                         }
-                    } elseif ($data[1]=='divstart') {
-                        $renderer->doc .= DOKU_LF.'<div class="imapcontent">'.DOKU_LF;
+                    } elseif ($data[1] == 'divstart') {
+                        $renderer->doc .= DOKU_LF . '<div class="imagemapping-content">' . DOKU_LF;
                         $has_content = true;
-                    } elseif ($data[1]=='divend') {
+                    } elseif ($data[1] == 'divend') {
                         $renderer->doc .= DOKU_LF;//.'</div>'.DOKU_LF;
                     }
                     break;
                 case DOKU_LEXER_EXIT:
-                    if ($has_content) $renderer->doc .= '</div>'.DOKU_LF;
+                    if ($has_content) $renderer->doc .= '</div>' . DOKU_LF;
                     $renderer->doc .= '</map>';
                     break;
                 case DOKU_LEXER_UNMATCHED:
@@ -212,19 +223,18 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
                     break;
             }
             return true;
-        }
-        elseif ($format == 'metadata') {
+        } elseif ($format == 'metadata') {
             switch ($state) {
                 case DOKU_LEXER_ENTER:
-                    list($state,$type,$src,$title,$name) = $data;
-                    if ($type=='internalmedia') {
-                        resolve_mediaid(getNS($ID),$src, $exists);
+                    list($state, $type, $src, $title, $name) = $data;
+                    if ($type == 'internalmedia') {
+                        resolve_mediaid(getNS($ID), $src, $exists);
                         $renderer->meta['relation']['media'][$src] = $exists;
                     }
                     if (is_null($title))
                         $title = $name;
                     if ($renderer->capture && $title)
-                        $renderer->doc .= '['.$title.']';
+                        $renderer->doc .= '[' . $title . ']';
                     break;
                 case DOKU_LEXER_EXIT:
                     break;
@@ -240,141 +250,3 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin {
 
 }
 
-if ( interface_exists( "dokuwiki\Parsing\Handler\CallWriterInterface", true ) ) {
-    // interface does not exist. DW too old?!
-    interface InternalCallWriterInterface extends dokuwiki\Parsing\Handler\CallWriterInterface {
-    }
-
-} else {
-    if ( !interface_exists("Doku_Handler_CallWriter_Interface") ) {
-        interface Doku_Handler_CallWriter_Interface {}
-    }
-
-    // interface does not exist. DW too old?!
-    interface InternalCallWriterInterface extends Doku_Handler_CallWriter_Interface {
-    }
-}
-
-class ImageMap_Handler implements InternalCallWriterInterface {
-
-    public $CallWriter;
-
-    private $calls = array();
-    private $areas = array();
-    private $mapname;
-
-    function __construct($name, &$CallWriter) {
-        $this->CallWriter =& $CallWriter;
-        $this->mapname = $name;
-    }
-
-    function writeCall($call) {
-        $this->calls[] = $call;
-    }
-
-    function writeCalls($calls) {
-        $this->calls = array_merge($this->calls, $calls);
-    }
-
-    function finalise() {
-        $last_call = end($this->calls);
-        $this->process();
-        $this->_addPluginCall(array(DOKU_LEXER_EXIT), $last_call[2]);
-        $this->CallWriter->finalise();
-    }
-
-    function process() {
-        $last_call = end($this->calls);
-        $first_call = array_shift($this->calls);
-
-        $this->CallWriter->writeCall($first_call);
-        $this->_processLinks($first_call[2]);
-
-        if (!empty($this->calls)) {
-            $this->_addPluginCall(array(DOKU_LEXER_MATCHED,'divstart'), $first_call[2]);
-            //Force a new paragraph
-            $this->CallWriter->writeCall(array('eol',array(),$this->calls[0][2]));
-            $this->CallWriter->writeCalls($this->calls);
-            $this->_addPluginCall(array(DOKU_LEXER_MATCHED,'divend'), $last_call[2]);
-        }
-    }
-
-    function _addPluginCall($args, $pos) {
-        $this->CallWriter->writeCall(array('plugin',
-                                           array('imagemapping', $args, $args[0]),
-                                           $pos));
-    }
-
-    function _addArea($pos, $type, $title, $url, $wiki=null) {
-        if (preg_match('/^(.*)@([^@]+)$/u', $title, $match)) {
-            $coords = explode(',',$match[2]);
-            if (count($coords) == 3) {
-                $shape = 'circle';
-            } elseif (count($coords) == 4) {
-                $shape = 'rect';
-            } elseif (count($coords) >= 6) {
-                $shape = 'poly';
-            } else {
-                return $title;
-            }
-            $coords = array_map('trim', $coords);
-            $title = trim($match[1]);
-            
-			$coords = join(',',$coords);
-			$coords = trim( $coords );
-            
-            $this->_addPluginCall(array(DOKU_LEXER_MATCHED, 'area', $shape, $coords,
-                                        $type, $title, $url, $wiki), $pos);
-        }
-        return $title;
-    }
-
-    function _processLinks($pos) {
-        for ($n=0;$n<count($this->calls);$n++) {
-            $data =& $this->calls[$n][1];
-            $type = $this->calls[$n][0];
-            switch ($type) {
-                case 'plugin':
-
-                    $plugin = plugin_load('syntax', $data[0]);
-                    if ( $plugin != null && method_exists($plugin, 'convertToImageMapArea')) {
-                        $plugin->convertToImageMapArea($this, $data[1], $pos);
-                        break;
-                    }
-                case 'internallink':
-                case 'locallink':
-                case 'externallink':
-                case 'emaillink':
-                case 'windowssharelink':
-                    if (is_array($data[1])) {
-                        $title = $data[1]['title'];
-                    } else {
-                        $title = $data[1];
-                    }
-                    $title = $this->_addArea($pos, $type, $title, $data[0]);
-                    if (is_array($data[1])) {
-                        $data[1]['title'] = $title;
-                    } else {
-                        $data[1] = $title;
-                    }
-                    break;
-                case 'interwikilink':
-                    if (is_array($data[1])) {
-                        $title = $data[1]['title'];
-                    } else {
-                        $title = $data[1];
-                    }
-                    $title = $this->_addArea($pos, $type, $title, $data[3], $data[2]);
-                    if (is_array($data[1])) {
-                        $data[1]['title'] = $title;
-                    } else {
-                        $data[1] = $title;
-                    }
-                    break;
-            }
-        }
-    }
-
-}
-
-//Setup VIM: ex: et ts=4 :

@@ -1,0 +1,14 @@
+# This is a list of files that were present in previous releases
+# but were removed later. They should not exist in your installation.
+.travis.yml
+LICENSE
+README.md
+_test/general.test.php
+_test/jstests/parseInputMap.test.php
+_test/jstests/test.php
+_test/maps.test.php
+_test/test.php
+all.css
+jquery.rwdImageMaps.js
+style.css
+style.less
