@@ -148,7 +148,7 @@ class syntax_plugin_imagemapping extends DokuWiki_Syntax_Plugin
                                 $default = $renderer->_simpleTitle($url);
                                 resolve_pageid(getNS($ID), $url, $exists);
                                 $title = $renderer->_getLinkTitle($title, $default, $isImg, $url);
-                                list($url, $hash) = explode('#', $url, 2);
+                                list($url, $hash) = explode('#', $url, 2) + [1 => null];
                                 if (!empty($hash)) $hash = $renderer->_headerToLink($hash);
                                 $url = wl($url);
                                 if ($hash) $url .= '#' . $hash;
